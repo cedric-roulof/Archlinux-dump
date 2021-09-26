@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+
 clear
 echo "INSTALLING PACKAGES FOR EPITECH'S DUMP"
 if [[ $EUID -ne 0 ]]; then
@@ -13,6 +14,10 @@ if [[ $? -ne 0 ]]; then
 fi
 echo "Press ENTER to continue..."
 read
+
+#Remove annoying beeeeeeps (pcspkr module)
+echo blacklist pcspkr | tee -a /etc/modprobe.d/blacklist-pcspkr.conf
+
 
 rpm --import https://packages.microsoft.com/keys/microsoft.asc
 sh -c 'echo -e "[teams]\nname=teams\nbaseurl=https://packages.microsoft.com/yumrepos/ms-teams\nenabled=1\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc" > /etc/yum.repos.d/teams.repo'
