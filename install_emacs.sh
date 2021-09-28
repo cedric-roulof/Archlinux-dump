@@ -17,9 +17,10 @@ read
 packages_list=(emacs-nox
                emacs-tuareg)
 
-git clone https://github.com/Epitech/epitech-emacs.git
 
 dnf - y install ${packages_list}
+
+git clone https://github.com/Epitech/epitech-emacs.git
 
 cd epitech-emacs
 git checkout 278bb6a630e6474f99028a8ee1a5c763e943d9a3
