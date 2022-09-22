@@ -79,12 +79,11 @@ packages_list=(boost-devel.x86_64
                zip.x86_64
                zsh.x86_64
                avr-gcc.x86_64
-               avr-gdb.x86_64
                qt-devel
                docker
                docker-compose
-               java-11-openjdk
-               java-11-openjdk-devel
+               java-17-openjdk
+               java-17-openjdk-devel
                boost
                boost-math
                boost-graph
@@ -93,8 +92,6 @@ packages_list=(boost-devel.x86_64
                tcpdump
                wireshark
                nodejs
-               python3-virtualenv-api
-               python3-virtualenv
                emacs-tuareg
                libvirt
                libvirt-devel
@@ -112,13 +109,14 @@ packages_list=(boost-devel.x86_64
                php-mysqlnd.x86_64
                php-pdo.x86_64
                php-pear.noarch
-               php-json.x86_64
                php-xml.x86_64
                php-gettext-gettext.noarch
                php-phar-io-version.noarch
                php-theseer-tokenizer.noarch
                SFML.x86_64
                SFML-devel.x86_64
+               CSFML.x86_64
+               CSFML-devel.x86_64
                irrlicht.x86_64
                irrlicht-devel.x86_64
                rust.x86_64
@@ -131,22 +129,27 @@ packages_list=(boost-devel.x86_64
                teams.x86_64)
 
 dnf -y install ${packages_list[@]}
-dnf -y remove java-8-openjdk java-8-openjdk-devel java-8-openjdk-headless
-
-# BLIH
-cp blih.py /usr/bin/blih
 
 # Criterion
-rpm -ivh https://github.com/samber/criterion-rpm-package/releases/download/2.3.3/libcriterion-devel-2.3.3-2.el7.x86_64.rpm
+curl -sSL "https://github.com/Snaipe/Criterion/releases/download/v2.4.0/criterion-2.4.0-linux-x86_64.tar.xz" -o criterion-2.4.0.tar.xz
+tar xf criterion-2.4.0.tar.xz
+cp -r criterion-2.4.0/* /usr/local/
+echo "/usr/local/lib" > /etc/ld.so.conf.d/usr-local.conf
+ldconfig
+rm -rf criterion-2.4.0.tar.xz criterion-2.4.0/
+
+# Sbt
+curl -sSL "https://github.com/sbt/sbt/releases/download/v1.3.13/sbt-1.3.13.tgz" | tar xz
+mv sbt /usr/local/share
+ln -s '/usr/local/share/sbt/bin/sbt' '/usr/local/bin'
 
 # Gradle
-wget https://downloads.gradle-dn.com/distributions/gradle-6.6.1-bin.zip && mkdir /opt/gradle && unzip -d /opt/gradle gradle-6.6.1-bin.zip && rm -f gradle-6.6.1-bin.zip \
+wget https://services.gradle.org/distributions/gradle-7.2-bin.zip
+mkdir /opt/gradle && unzip -d /opt/gradle gradle-7.2-bin.zip && rm -f gradle-7.2-bin.zip
+echo 'export PATH=$PATH:/opt/gradle/gradle-7.2/bin' >> /etc/profile
 
 # Stack
 curl -sSL https://get.haskellstack.org/ | sh
-
-# CSFML
-./build_csfml.sh
 
 # CONFIG EMACS
 git clone https://github.com/Epitech/epitech-emacs.git
@@ -155,4 +158,9 @@ git checkout 278bb6a630e6474f99028a8ee1a5c763e943d9a3
 ./INSTALL.sh system
 cd .. && rm -rf epitech-emacs
 
-install -m 644 bash_completion.d/blih /usr/share/bash-completion/completions
+# CONFIG VIM
+git clone https://github.com/Epitech/vim-epitech.git
+cd vim-epitech
+git checkout ec936f2a49ca673901d56598e141932fd309ddac
+./install.sh
+cd .. && rm -rf vim-epitech
