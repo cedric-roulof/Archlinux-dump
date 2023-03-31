@@ -130,7 +130,7 @@ packages_list=(boost-devel.x86_64
                x264.x86_64
                fbida-fbpdf.x86_64
                lightspark.x86_64
-               lightspark-mozilla-plugin.x86_64)               )
+               lightspark-mozilla-plugin.x86_64)
 
 dnf -y install ${packages_list[@]}
 
