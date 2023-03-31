@@ -19,7 +19,6 @@ read
 echo blacklist pcspkr | tee -a /etc/modprobe.d/blacklist-pcspkr.conf
 
 rpm --import https://packages.microsoft.com/keys/microsoft.asc
-sh -c 'echo -e "[teams]\nname=teams\nbaseurl=https://packages.microsoft.com/yumrepos/ms-teams\nenabled=1\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc" > /etc/yum.repos.d/teams.repo'
 dnf -y install dnf-plugins-core && dnf -y install https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
 
 #Google Chrome
@@ -131,8 +130,7 @@ packages_list=(boost-devel.x86_64
                x264.x86_64
                fbida-fbpdf.x86_64
                lightspark.x86_64
-               lightspark-mozilla-plugin.x86_64
-               teams.x86_64)
+               lightspark-mozilla-plugin.x86_64)               )
 
 dnf -y install ${packages_list[@]}
 
