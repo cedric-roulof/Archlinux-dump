@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-FEDORA_RELEASE="Fedora release 36"
 
 clear
 echo "INSTALLING PACKAGES FOR EPITECH'S DUMP"
@@ -7,132 +6,116 @@ if [[ $EUID -ne 0 ]]; then
    echo "This script must be run as root" 1>&2
    exit 1
 fi
-cat /etc/fedora-release | grep "${FEDORA_RELEASE}"
-if [[ $? -ne 0 ]]; then
-    echo "This script must be run onto a ${FEDORA_RELEASE}";
+if [[ ! -f /etc/arch-release ]]; then
+    echo "This script must be run on Arch Linux";
     exit 1
 fi
 echo "Press ENTER to continue..."
 read
 
-#Remove annoying beeeeeeps (pcspkr module)
-echo blacklist pcspkr | tee -a /etc/modprobe.d/blacklist-pcspkr.conf
+# Remove annoying beeeeeeps (pcspkr module)
+echo "blacklist pcspkr" | tee -a /etc/modprobe.d/blacklist-pcspkr.conf
 
-rpm --import https://packages.microsoft.com/keys/microsoft.asc
-dnf -y install dnf-plugins-core && dnf -y install https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
+# Add Microsoft package repository key
+pacman-key --recv-keys EB3E94ADBE1229CF
+pacman-key --lsign-key EB3E94ADBE1229CF
 
-#Google Chrome
-dnf -y install fedora-workstation-repositories
-dnf config-manager --set-enabled google-chrome
+# Check if yay is already installed
+if ! command -v yay &> /dev/null; then
+    echo "yay not found. Installing yay..."
+    sudo -u "$SUDO_USER" bash -c "git clone https://aur.archlinux.org/yay.git && cd yay && makepkg -si --noconfirm"
+    rm -rf yay
+fi
 
+# Enable AUR support
+sudo -u "$SUDO_USER" yay -Syu --needed --noconfirm
 
-dnf upgrade -y
+# Google Chrome
+sudo -u "$SUDO_USER" yay -S --noconfirm google-chrome
 
-packages_list=(boost-devel.x86_64
-               boost-static.x86_64
-               ca-certificates.noarch
-               clang.x86_64
-               cmake.x86_64
-               CUnit-devel.x86_64
-               curl.x86_64
-               discord.x86_64
-               flac-devel.x86_64
-               freetype-devel.x86_64
-               gcc.x86_64
-               gcc-c++.x86_64
-               gdb.x86_64
-               git
-               glibc.x86_64
-               glibc-devel.x86_64
-               glibc-locale-source.x86_64
-               google-chrome-stable
-               gmp-devel.x86_64
-               ksh.x86_64
-               elfutils-libelf-devel.x86_64
-               libjpeg-turbo-devel.x86_64
-               libvorbis-devel.x86_64
-               SDL2.x86_64
-               SDL2-static.x86_64
-               SDL2-devel.x86_64
-               libX11-devel.x86_64
-               libXext-devel.x86_64
-               ltrace.x86_64
-               make.x86_64
-               nasm.x86_64
-               ncurses.x86_64
-               ncurses-devel.x86_64
-               ncurses-libs.x86_64
-               net-tools.x86_64
-               openal-soft-devel.x86_64
-               python3-numpy.x86_64
-               python3.x86_64
-               rlwrap.x86_64
-               ruby.x86_64
-               strace.x86_64
-               tar.x86_64
-               tcsh.x86_64
-               tmux.x86_64
-               sudo.x86_64
-               tree.x86_64
-               unzip.x86_64
-               valgrind.x86_64
-               vim
-               emacs-nox
-               which.x86_64
-               xcb-util-image.x86_64
-               xcb-util-image-devel.x86_64
-               zip.x86_64
-               zsh.x86_64
-               avr-gcc.x86_64
-               qt-devel
-               docker
-               docker-compose
-               java-17-openjdk
-               java-17-openjdk-devel
-               boost
-               boost-math
-               boost-graph
-               autoconf
-               automake
-               tcpdump
-               wireshark
-               nodejs
-               emacs-tuareg
-               libvirt
-               libvirt-devel
-               virt-install
-               haskell-platform
-               golang
-               systemd-devel
-               libgudev-devel
-               php.x86_64
-               php-devel.x86_64
-               php-bcmath.x86_64
-               php-cli.x86_64
-               php-gd.x86_64
-               php-mbstring.x86_64
-               php-mysqlnd.x86_64
-               php-pdo.x86_64
-               php-pear.noarch
-               php-xml.x86_64
-               php-gettext-gettext.noarch
-               php-phar-io-version.noarch
-               php-theseer-tokenizer.noarch
-               SFML.x86_64
-               SFML-devel.x86_64
-               CSFML.x86_64
-               CSFML-devel.x86_64
-               irrlicht.x86_64
-               irrlicht-devel.x86_64
-               rust.x86_64
-               cargo.x86_64
-               mariadb-server.x86_64
-               x264.x86_64
-               fbida-fbpdf.x86_64
-               lightspark.x86_64
-               lightspark-mozilla-plugin.x86_64)
+# Update system
+pacman -Syu --noconfirm
 
-dnf -y install ${packages_list[@]}
+packages_list=(
+    boost
+    boost-libs
+    cmake
+    clang
+    cunit
+    curl
+    discord
+    flac
+    freetype2
+    gcc
+    gdb
+    git
+    glibc
+    gmp
+    ksh
+    libjpeg-turbo
+    libvorbis
+    sdl2
+    ltrace
+    make
+    nasm
+    ncurses
+    net-tools
+    openal
+    python-numpy
+    python
+    rlwrap
+    ruby
+    strace
+    tar
+    tcsh
+    tmux
+    sudo
+    tree
+    unzip
+    valgrind
+    vim
+    emacs-nox
+    which
+    xcb-util-image
+    zip
+    zsh
+    avr-gcc
+    qt5-base
+    docker
+    docker-compose
+    jdk-openjdk
+    boost
+    autoconf
+    automake
+    tcpdump
+    wireshark-qt
+    nodejs
+    haskell-platform
+    go
+    systemd
+    libgudev
+    php
+    php-gd
+    php-mbstring
+    php-sqlite
+    php-pear
+    php-xml
+    php-gettext-gettext
+    php-phar-io-version
+    php-theseer-tokenizer
+    sfml
+    csfml
+    irrlicht
+    rust
+    cargo
+    mariadb
+    x264
+    fbida
+    lightspark
+    lightspark-mozilla-plugin
+)
+
+sudo -u "$SUDO_USER" yay -S --noconfirm "${packages_list[@]}"
 
 # Criterion
 curl -sSL "https://github.com/Snaipe/Criterion/releases/download/v2.4.0/criterion-2.4.0-linux-x86_64.tar.xz" -o criterion-2.4.0.tar.xz
