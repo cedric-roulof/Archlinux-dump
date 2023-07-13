@@ -1,6 +1,6 @@
 `chmod +x install_packages_dump.sh`
 `chmod +x install_yay.sh`
 
-First launch `install_yay.sh` then `intstall_packages_dump.sh`
-`install_yay.sh` do not required root or sudo do be executed
-`install_packages_dump.sh` need to be executed as root or with sudo
+To begin, first launch install_yay.sh. This script does not require root or sudo privileges to be executed.
+
+Next, run install_packages_dump.sh. However, it needs to be executed as root or with sudo privileges.
