@@ -1,3 +1,5 @@
+TESTED ON Linux 6.4.3-arch1-1
+
 `chmod +x install_packages_dump.sh`
 `chmod +x install_yay.sh`
 
